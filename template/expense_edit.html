@@ -1,0 +1,122 @@
+{% include 'user_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Expense | Expense Tracker</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f8f9fb;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    h2 {
+        text-align: center;
+        font-weight: 600;
+        color: #5b4b8a;
+        margin: 30px 0 15px;
+    }
+
+    .expense-form-card {
+        max-width: 480px;
+        margin: 0 auto 40px;
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .expense-form-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+
+    .expense-form-card form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .expense-form-card .form-group {
+        position: relative;
+    }
+
+    .expense-form-card input,
+    .expense-form-card select {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .expense-form-card input:focus,
+    .expense-form-card select:focus {
+        border-color: #5b4b8a;
+        box-shadow: 0 0 8px rgba(91, 75, 138, 0.2);
+        outline: none;
+    }
+
+    .expense-form-card button {
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #5b4b8a, #7e6cc3);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .expense-form-card button:hover {
+        background: linear-gradient(135deg, #29162a, #29162a);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+        .expense-form-card select,
+        .expense-form-card input {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h2>Edit Expense</h2>
+<div class="expense-form-card">
+    <form action="{% url 'exedit' id=da.id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <select name="category" required>
+                <option value="">Select Category</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if da.category and da.category.id == cat.id %}selected{% endif %}>
+                        {{ cat.category_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="number" name="amount" value="{{ da.amount }}" placeholder="Amount" required>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="description" value="{{ da.description }}" placeholder="Description" required>
+        </div>
+
+        <button type="submit">Update Expense</button>
+    </form>
+</div>
+
+</body>
+</html>

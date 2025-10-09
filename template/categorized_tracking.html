@@ -1,0 +1,135 @@
+{% include 'user_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense by Category | MyExpense</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f6f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      letter-spacing: 0.8px;
+      color: #4A3C8A;
+    }
+
+    .category-card {
+      background: #F9F7FF;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(90, 60, 150, 0.15);
+      padding: 25px;
+      margin-bottom: 35px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 22px rgba(120, 90, 180, 0.25);
+    }
+
+    .category-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #5B4B8A;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .category-total {
+      font-size: 16px;
+      font-weight: 500;
+      color: #7A6BB7;
+    }
+
+    .expense-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .expense-item {
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      padding: 15px 18px;
+      transition: all 0.3s ease;
+    }
+
+    .expense-item:hover {
+      background: #F4EEFF;
+      box-shadow: 0 6px 14px rgba(100, 70, 160, 0.15);
+    }
+
+    .expense-desc {
+      font-size: 16px;
+      font-weight: 500;
+      color: #3E2F84;
+      margin-bottom: 6px;
+    }
+
+    .expense-amount {
+      color: #5B4B8A;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .expense-date {
+      font-size: 13px;
+      color: #7C72A6;
+      margin-top: 3px;
+    }
+
+    .no-expense {
+      text-align: center;
+      color: #7A6BB7;
+      background: #F4EEFF;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(120, 90, 180, 0.1);
+      width: 80%;
+      margin: 50px auto;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<br>
+  <h2>Expense by Category</h2>
+
+  {% if data %}
+    {% for i in data %}
+      <div class="category-card">
+        <div class="category-title">
+          <span>{{ i.category_name }}</span>
+          <span class="category-total">Total: ₹{{ i.total }}</span>
+        </div>
+
+        <div class="expense-list">
+          {% for expense in i.expenses %}
+            <div class="expense-item">
+              <div class="expense-desc">{{ expense.description }}</div>
+              <div class="expense-amount">₹{{ expense.amount }}</div>
+              <div class="expense-date">{{ expense.date }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-expense">No expenses found.</div>
+  {% endif %}
+
+</body>
+</html>

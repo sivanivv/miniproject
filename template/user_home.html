@@ -1,0 +1,98 @@
+{% include 'user_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Home | Expense Tracker</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f6f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 50px 0 30px;
+      color: #5b4b8a;
+      letter-spacing: 1px;
+    }
+
+    .card {
+      background: #fff;
+      width: 90%;
+      max-width: 500px;
+      margin: 40px auto;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      padding: 30px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 100px;
+      height: 100px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(155, 126, 222, 0.25);
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 26px;
+      color: #5b4b8a;
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+      color: #5b4b8a;
+      text-transform: capitalize;
+      letter-spacing: 0.5px;
+    }
+
+    .card p {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #6a5aa8;
+    }
+  </style>
+</head>
+<body>
+
+  {% for i in data %}
+    <div class="card">
+      <div class="icon"><i class="fa-solid fa-user"></i></div>
+      <h3>Welcome, {{ i.username }}!</h3>
+      <p>Glad to see you back. Track your expenses and manage your finances effectively.</p>
+    </div>
+  {% endfor %}
+
+</body>
+</html>

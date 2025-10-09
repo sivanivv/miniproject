@@ -1,0 +1,200 @@
+{% include 'user_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Report | MyExpense</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f6f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 600;
+      color: #4A3C8A;
+      letter-spacing: 0.5px;
+      margin-bottom: 25px;
+    }
+
+    form {
+      background: #F9F7FF;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(90, 60, 150, 0.15);
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 40px;
+      padding: 30px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #4A3C8A;
+      font-size: 0.95rem;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border: 1.3px solid #D1C4E9;
+      border-radius: 8px;
+      background: #F4EEFF;
+      color: #3E2F84;
+      font-size: 0.9rem;
+      transition: 0.3s ease;
+      width: 100%;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      background: #FFF;
+      border-color: #A58ADE;
+      box-shadow: 0 0 6px rgba(165, 138, 222, 0.25);
+    }
+
+    button {
+      background: linear-gradient(135deg, #7D66C7, #5F4CA4);
+      color: #FFF;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #6D5BBF, #4E3D8F);
+      box-shadow: 0 5px 10px rgba(90, 60, 150, 0.25);
+    }
+
+    .report-section {
+      background: #F9F7FF;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(90, 60, 150, 0.15);
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 25px;
+    }
+
+    .report-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #5B4B8A;
+      margin-bottom: 25px;
+    }
+
+    .expense-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .expense-item {
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      padding: 15px 18px;
+      transition: 0.3s ease;
+    }
+
+    .expense-item:hover {
+      background: #F4EEFF;
+      box-shadow: 0 6px 14px rgba(100, 70, 160, 0.15);
+    }
+
+    .expense-item h4 {
+      margin: 0 0 5px;
+      color: #3E2F84;
+      font-size: 16px;
+    }
+
+    .expense-item p {
+      margin: 2px 0;
+      font-size: 14px;
+      color: #5B4B8A;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: 600;
+      font-size: 18px;
+      color: #4E3D8F;
+      margin-top: 20px;
+    }
+
+    .no-expense {
+      text-align: center;
+      color: #7A6BB7;
+      background: #F4EEFF;
+      padding: 20px;
+      border-radius: 12px;
+      width: 80%;
+      margin: 30px auto;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(120, 90, 180, 0.1);
+    }
+  </style>
+</head>
+<body>
+  
+<br><br>
+  <h2>Generate Expense Report</h2>
+
+  <form action="{% url 'report' %}" method="post">
+    {% csrf_token %}
+    <div>
+      <label>Start Date:</label>
+      <input type="date" name="start_date" required>
+    </div>
+    <div>
+      <label>End Date:</label>
+      <input type="date" name="end_date" required>
+    </div>
+    <div>
+      <label>Report Type:</label>
+      <select name="report_type" required>
+        <option value="Daily">Daily</option>
+        <option value="Monthly">Monthly</option>
+        <option value="Category-wise">Category-wise</option>
+      </select>
+    </div>
+    <button type="submit">Generate</button>
+  </form>
+
+  {% if rtype %}
+    <div class="report-section">
+      <div class="report-title">{{ rtype }} Expense Report</div>
+
+      {% if expenses %}
+        <div class="expense-list">
+          {% for i in expenses %}
+            <div class="expense-item">
+              <h4>{{ i.category.category_name }}</h4>
+              <p><strong>₹{{ i.amount }}</strong></p>
+              <p>{{ i.description }}</p>
+              <p><small>{{ i.date }}</small></p>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="total">Total Amount: ₹{{ total_amount }}</div>
+      {% else %}
+        <div class="no-expense">No expenses found for this period.</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</body>
+</html>

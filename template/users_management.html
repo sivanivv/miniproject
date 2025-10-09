@@ -1,0 +1,149 @@
+{% include 'admin_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management | Expense Tracker</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f6f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 30px 0;
+      color: #5b4b8a;
+      letter-spacing: 1px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      width: 90%;
+      margin: auto;
+      padding-bottom: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      padding: 25px 20px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 100px;
+      height: 100px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(155, 126, 222, 0.25);
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 26px;
+      color: #5b4b8a;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #5b4b8a;
+      text-transform: capitalize;
+      letter-spacing: 0.5px;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #6a5aa8;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .actions a {
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .view {
+      background: #e9ddfb;
+      color: #5b4b8a;
+    }
+    .view:hover {
+      background: #d6c9f2;
+    }
+
+    .delete {
+      background: #fde2e4;
+      color: #b23a48;
+    }
+    .delete:hover {
+      background: #fbb1bb;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>USER MANAGEMENT</h2>
+
+  <div class="grid">
+    {% for i in users %}
+      <div class="card">
+        <div class="icon"><i class="fa-solid fa-user"></i></div>
+        <h3>{{ i.user_id.first_name }} {{ i.user_id.last_name }}</h3>
+        <div class="info">
+          <p><strong>Email:</strong> {{ i.user_id.email }}</p>
+          <p><strong>Username:</strong> {{ i.user_id.username }}</p>
+        </div>
+        <div class="actions">
+          
+            <a href="{% url 'userdelete' id=i.id %}" class="view">Delete</a></td>
+         
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</body>
+</html>

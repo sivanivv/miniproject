@@ -1,0 +1,174 @@
+{% include 'admin_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Categories</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 30px 0;
+      color: #5b4b8a;
+      letter-spacing: 1px;
+    }
+
+    .add-box {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .add-box input {
+      padding: 12px;
+      border: 2px solid #d6c9f2;
+      border-radius: 12px;
+      outline: none;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .add-box button {
+      background: linear-gradient(135deg, #5b4b8a, #5b4b8a);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .add-box button:hover {
+      opacity: 0.9;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 90%;
+      margin: auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      padding: 30px 20px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 100px;
+      height: 100px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(155, 126, 222, 0.25);
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 24px;
+      color: #5b4b8a;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #5b4b8a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .actions a {
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .edit {
+      background: #e9ddfb;
+      color: #5b4b8a;
+    }
+    .edit:hover {
+      background: #d6c9f2;
+    }
+
+    .delete {
+      background: #fde2e4;
+      color: #412434;
+    }
+    .delete:hover {
+      background: #fbb1bb;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>EXPENSE CATEGORIES</h2>
+
+  <div class="add-box">
+    <form action="{% url 'category' %}" method="post">
+      {% csrf_token %}
+      <input type="text" name="category_name" placeholder="Enter category name..." required>
+      <button type="submit">+ Add</button>
+    </form>
+  </div>
+
+  <div class="grid">
+    {% for i in categories %}
+      <div class="card">
+        <!-- Changed folder icon to wallet icon -->
+        <div class="icon"><i class="fa-solid fa-wallet"></i></div>
+        <h3>{{ i.category_name }}</h3>
+        <div class="actions">
+          <a href="{% url 'catedit' id=i.id %}" class="edit">Edit</a>
+          <a href="{% url 'catdelete' id=i.id %}" class="delete">Delete</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</body>
+</html>

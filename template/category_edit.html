@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Edit Categories</h2>
+
+    <form action="{% url 'catedit' id=da.id %}" method="post">
+        {% csrf_token %}
+
+         <input type="text" name="category_name" value="{{da.category_name}}" id="category_name" placeholder="" required>
+         <button type="submit">Update</button>
+
+    </form>

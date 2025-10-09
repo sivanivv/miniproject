@@ -1,0 +1,222 @@
+{% include 'user_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ group.name }} - Details</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f6f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 30px 0 10px;
+      color: #5b4b8a;
+      letter-spacing: 1px;
+    }
+
+    p {
+      text-align: center;
+      color: #6c5ca4;
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    /* Keep your original form style */
+    .form-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    form label {
+      font-weight: 500;
+      color: #5b4b8a;
+      font-size: 14px;
+    }
+
+    form input {
+      padding: 10px;
+      border: 1.5px solid #d6c9f2;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    form input:focus {
+      border-color: #9b7ede;
+      outline: none;
+    }
+
+    form button {
+      background: linear-gradient(135deg, #9b7ede, #7a5cc7);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    form button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    h3 {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #5b4b8a;
+      margin-top: 40px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Card Layout for Group Expenses */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      width: 90%;
+      margin: 25px auto 50px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      padding: 25px 20px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 100px;
+      height: 100px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(155, 126, 222, 0.25);
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      background: #e9ddfb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 24px;
+      color: #5b4b8a;
+      margin-bottom: 15px;
+    }
+
+    .card h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #5b4b8a;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #6c5ca4;
+    }
+
+    .card .highlight {
+      font-weight: 600;
+      color: #5b4b8a;
+    }
+
+    .no-expense {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2><i class="fa-solid fa-people-group"></i> {{ group.name }}</h2>
+  <p>
+    <strong>Members:</strong>
+    {% for m in group.members.all %}
+      {{ m.username }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+
+  <!-- Keep your existing form -->
+  <h3>Add Expense</h3>
+  <div class="form-container">
+    <form action="{% url 'group_detail' group.id %}" method="post">
+      {% csrf_token %}
+      <label>Expense Name</label>
+      <input type="text" name="description" placeholder="Enter expense name" required>
+
+      <label>Amount</label>
+      <input type="number" name="amount" step="0.01" placeholder="Enter amount" required>
+
+      <button type="submit">Add Expense</button>
+    </form>
+  </div>
+
+  <!-- Replaced Table with Card Layout -->
+  <h3><i class="fa-solid fa-wallet"></i> Group Expenses</h3>
+
+  {% if grouped_data %}
+  <div class="grid">
+    {% for g in grouped_data %}
+      <div class="card">
+        <div class="icon"><i class="fa-solid fa-receipt"></i></div>
+        <h4>{{ g.description }}</h4>
+        <p><span class="highlight">Amount:</span> ₹{{ g.amount }}</p>
+        <p><span class="highlight">Paid by:</span> {{ g.owner }}</p>
+        <p><span class="highlight">Members:</span>
+          {% for member in g.members %}
+            {{ member }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </p>
+        <p><span class="highlight">Each Share:</span> ₹{{ g.split_amount }}</p>
+      </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="no-expense">No expenses added yet</p>
+  {% endif %}
+
+</body>
+</html>

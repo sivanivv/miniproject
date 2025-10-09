@@ -1,0 +1,173 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Expense Tracker</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <style>
+    body {
+      background: linear-gradient(135deg, #ECE7F7 40%, #D8CFF7 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 10px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .register-container {
+      background: #F9F7FF;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(90, 60, 150, 0.15);
+      width: 100%;
+      max-width: 320px;
+      padding: 32px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle lavender gradient circles */
+    .register-container::before,
+    .register-container::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    .register-container::before {
+      top: -50px;
+      right: -45px;
+      width: 100px;
+      height: 100px;
+      background: #D6C5F0;
+    }
+
+    .register-container::after {
+      bottom: -40px;
+      left: -40px;
+      width: 90px;
+      height: 90px;
+      background: #CBB6F0;
+    }
+
+    h2 {
+      color: #3E2F84;
+      font-size: 21px;
+      font-weight: 600;
+      margin-bottom: 22px;
+      z-index: 1;
+      position: relative;
+      letter-spacing: 0.4px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 90%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1.2px solid #D1C4E9;
+      background-color: #F4EEFF;
+      color: #3E347B;
+      font-size: 0.92rem;
+      transition: 0.3s ease;
+      text-align: left;
+    }
+
+    .form-group input::placeholder {
+      color: #8A7CCF;
+      font-size: 0.88rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #A58ADE;
+      background: #FFF;
+      box-shadow: 0 0 6px rgba(165, 138, 222, 0.25);
+    }
+
+    button[type="submit"] {
+      width: 90%;
+      background: linear-gradient(135deg, #7D66C7, #5F4CA4);
+      color: #FFF;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1;
+      position: relative;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #6D5BBF, #4E3D8F);
+      box-shadow: 0 5px 10px rgba(90, 60, 150, 0.25);
+    }
+
+    .login-link {
+      margin-top: 14px;
+      color: #5A4C9C;
+      font-size: 0.85rem;
+      z-index: 1;
+      position: relative;
+    }
+
+    .login-link a {
+      color: #7055C5;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="register-container">
+    <h2>Register Your Account</h2>
+    <form action="{% url 'register_submit' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" name="fname" placeholder="First Name" required>
+      </div>
+      <div class="form-group">
+        <input type="text" name="lname" placeholder="Last Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Email Address" required>
+      </div>
+      <div class="form-group">
+        <input type="text" name="username" placeholder="Username" required>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="form-group">
+        
+      </div>
+      <button type="submit">Create Account</button>
+    </form>
+    <p class="login-link">Already registered? <a href="{% url 'login' %}">Sign in here</a></p>
+  </div>
+
+  
+</body>
+</html>
