@@ -23,8 +23,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
-    path('register/',views.Registercall,name='register'),
-    path('register/submit/', views.Register, name='register_submit'),
+    
+    path('register/',views.Register, name='register'),
     path('login/',views.Login,name='login'),
     path('adminhome/',views.adminhomecall,name='adminhome'),
     path('userhome/', views.userhomecall, name='userhome'),
@@ -46,6 +46,8 @@ urlpatterns = [
 
     path('groups/', views.Groups, name='groups'),
     path('group/<int:id>/', views.Group_detail, name='group_detail'),
+    path('notifications/', views.notifications, name='notifications'),
+
 
     path('logout/', views.Logout, name='logout'),
 

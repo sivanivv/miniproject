@@ -79,14 +79,6 @@
       text-align: left;
     }
 
-    .form-group label {
-      display: block;
-      color: #4A3C8A;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 5px;
-    }
-
     .form-group input {
       width: 100%;
       padding: 9px 12px;
@@ -146,6 +138,55 @@
     .register-link a:hover {
       text-decoration: underline;
     }
+
+    /* 🌸 Toast Message Styles */
+    .toast-container {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .toast {
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: slideIn 0.5s ease, fadeOut 0.5s ease 3.5s forwards;
+      opacity: 0.95;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 240px;
+    }
+
+    .toast.success {
+      background: linear-gradient(135deg, #C9F7D9, #A5E1C2);
+      color: #145A32;
+    }
+
+    .toast.error {
+      background: linear-gradient(135deg, #F8D7DA, #F5B7B1);
+      color: #721C24;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateX(100%); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 
@@ -155,13 +196,11 @@
     <form method="POST" action="{% url 'login' %}">
       {% csrf_token %}
       <div class="form-group">
-        
-        <input type="text" name="username" id="username" placeholder="Enter your username" required>
+        <input type="text" name="username" placeholder="Enter your username" required>
       </div>
 
       <div class="form-group">
-        
-        <input type="password" name="password" id="password" placeholder="Enter your password" required>
+        <input type="password" name="password" placeholder="Enter your password" required>
       </div>
 
       <button type="submit">Login</button>
@@ -171,5 +210,22 @@
       Don’t have an account? <a href="{% url 'register' %}">Register here</a>
     </p>
   </div>
+
+  <!-- Toast Notification Section -->
+  {% if messages %}
+  <div class="toast-container">
+    {% for message in messages %}
+      <div class="toast {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.toast').forEach(toast => toast.remove());
+    }, 4000);
+  </script>
 </body>
 </html>

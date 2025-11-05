@@ -51,9 +51,8 @@
 
         <div class="d-flex align-items-center">
           <div class="social-links">
-            <a href="{% url 'logout' %}" class="instagram"><i class="bi bi-box-arrow-right"> Logout</i></a>
-
             
+            <a href="{% url 'logout' %}" class="instagram"><i class="bi bi-box-arrow-right"> Logout</i></a>
           </div>
 
     
@@ -62,41 +61,7 @@
 
     </div>
 
-    <div class="nav-wrap">
-      <div class="container d-flex justify-content-center position-relative">
-        <nav id="navmenu" class="navmenu">
-          <ul>
-            <li><a href="{% url 'userhome' %}" class="active">Home</a></li>
-            <li><a href="{% url 'expense' %}">Expenses</a></li>
-            <li><a href="{% url 'catrack' %}">CategoryTracker</a></li>
-            <li><a href="{% url 'report' %}">Report</a></li>
-            <li><a href="{% url 'groups' %}">Split with friends</a></li>
-            <li><a href="{% url 'notifications' %}">Notifications 
-      {% if unread_count > 0 %}
-        <span class="badge">{{ unread_count }}</span>
-      {% endif %}
-    </a></li>
-    <li><a href="{% url 'logout' %}">Logout</a></li>
-  </ul>
-</nav>
-
-<style>
-.badge {
-  background-color: #ff4b5c;
-  color: white;
-  font-size: 12px;
-  border-radius: 50%;
-  padding: 3px 6px;
-  margin-left: 4px;
-}
-</style>
-
-            
-          </ul>
-          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
-      </div>
-    </div>
+    
 
   </header>
 

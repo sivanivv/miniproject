@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .models import Category
+from django.contrib import messages
 from .models import Expense,Report,SplitExpense,Group
 
 # Create your views here.
@@ -11,8 +12,7 @@ from .models import Expense,Report,SplitExpense,Group
 def index(request):
     return render(request,'index.html')
 
-def Registercall(request):
-    return render(request,'register.html')
+
 
 def adminhomecall(request):
     return render(request,'admin_home.html')
@@ -29,56 +29,78 @@ def userhomecall(request):
 
 def Register(request):
     if request.method == 'POST':
-        fname = request.POST['fname']
-        lname = request.POST['lname']
-        email = request.POST['email']
-        uname = request.POST['username']
-        pword = request.POST['password']
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        email = request.POST.get('email')
+        uname = request.POST.get('username')
+        pword = request.POST.get('password')
 
-        # Check if username already exists
-        if User.objects.filter(username=uname).exists():
-            return HttpResponse("⚠ Username already taken, please try another one.")
+        try:
+            # Check if username already exists
+            if User.objects.filter(username=uname).exists():
+                messages.error(request, "⚠ Username already taken. Please choose another.")
+                return render(request,'register.html')
 
-        # Create new user
-        user = User.objects.create_user(
-            first_name=fname,
-            last_name=lname,
-            email=email,
-            username=uname,
-            password=pword
-        )
+            # Check if email already exists
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "⚠ Email is already registered.")
+                return render(request,'register.html')
 
-        UserProfile.objects.create(user_id=user, user_type='regular')
+            # Create the user
+            user = User.objects.create_user(
+                first_name=fname,
+                last_name=lname,
+                email=email,
+                username=uname,
+                password=pword
+            )
 
-        
-        return redirect('login')
+            # Create associated profile
+            UserProfile.objects.create(user_id=user, user_type='regular')
 
-    return redirect('registercall')
+            messages.success(request, "✅ Account created successfully! Please login.")
+            return redirect('login')
+
+        except Exception as e:
+            messages.error(request, f"❌ Something went wrong: {str(e)}")
+            return render(request,'register.html')
+
+    return render(request,'register.html')
+
 
 
 
 def Login(request):
     if request.method == 'POST':
-        uname = request.POST['username']
-        pword = request.POST['password']
+        uname = request.POST.get('username')
+        pword = request.POST.get('password')
+
+        # Check for empty fields
+        if not uname or not pword:
+            messages.error(request, "⚠ Please enter both username and password.")
+            return render(request, 'login.html')
 
         user = authenticate(request, username=uname, password=pword)
         if user is not None:
             login(request, user)
-
             try:
-                profile = UserProfile.objects.get(user_id=user)  
+                profile = UserProfile.objects.get(user_id=user)
+                messages.success(request, f"✅ Loged out!")
+
                 if profile.user_type == 'regular':
                     return redirect('userhome')
                 elif profile.user_type == 'admin':
-                    return redirect('adminhome')  
+                    return redirect('adminhome')
                 else:
-                    return HttpResponse("⚠ Unknown user type!")
-            except UserProfile.DoesNotExist:
-                return HttpResponse("❌ No profile found for this user.")
+                    messages.error(request, "⚠ Unknown user type!")
+                    return render(request, 'login.html')
 
+            except UserProfile.DoesNotExist:
+                messages.error(request, "❌ No profile found for this user.")
+                return render(request, 'login.html')
         else:
-            return HttpResponse("❌ Invalid username or password. Try again.")
+            messages.error(request, "❌ Invalid username or password. Try again.")
+            return render(request, 'login.html')
 
     return render(request, 'login.html')
 
@@ -143,10 +165,11 @@ def Add_expense(request):
         category_id = int(request.POST['category'])
         amount = request.POST['amount']
         description = request.POST.get('description', '')
+        date=request.POST['date']
         user = request.user
         category = Category.objects.get(id=category_id)
 
-        Expense.objects.create(user=user, category=category, amount=amount, description=description)
+        Expense.objects.create(user=user, category=category, amount=amount, description=description,date=date)
         return redirect('expense')  
 
     expenses = Expense.objects.filter(user=request.user).order_by('-date', '-id')
@@ -250,6 +273,8 @@ def Groups(request):
     return render(request, 'group.html', {'friends': friends, 'groups': groups})
 
 
+from .models import Notification
+
 def Group_detail(request, id):
     group = Group.objects.get(id=id)
     members = group.members.all()
@@ -273,9 +298,16 @@ def Group_detail(request, id):
                 access_type="View-Only"
             )
 
+            # ✅ Send notification to other members (not the one who added)
+            if m != owner:
+                Notification.objects.create(
+                    user=m,
+                    message=f"{owner.username} added a new expense '{desc}' in group '{group.name}'. Your share is ₹{per_person:.2f}."
+                )
+
         return redirect('group_detail', id=id)
 
-    # Get all split expenses for this group, ordered by newest first
+    # Get all split expenses for this group
     split_expenses = SplitExpense.objects.filter(group=group).order_by('-id')
 
     # Prepare structured data for display
@@ -296,6 +328,12 @@ def Group_detail(request, id):
         'group': group,
         'grouped_data': grouped_data.values(),
     })
+
+
+def notifications(request):
+    user_notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'notifications.html', {'notifications': user_notifications})
+
 
 
 from django.contrib.auth.models import auth

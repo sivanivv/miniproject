@@ -1,0 +1,56 @@
+{% include 'user_header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications</title>
+  <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f7f5fc;
+        margin: 0;
+        padding: 40px;
+    }
+    h2 {
+        text-align: center;
+        color: #5b4b8a;
+    }
+    .notif-box {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 20px;
+    }
+    .notif {
+        border-bottom: 1px solid #eee;
+        padding: 10px;
+    }
+    .notif:last-child { border: none; }
+    .notif.unread { background: #f3edff; font-weight: 500; }
+    .notif small { color: #777; display: block; margin-top: 4px; }
+    .mark-read {
+        float: right;
+        font-size: 13px;
+        color: #7a5cc7;
+        text-decoration: none;
+    }
+    .mark-read:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h2>Notifications</h2>
+  <div class="notif-box">
+    {% for n in notifications %}
+      <div class="notif {% if not n.is_read %}unread{% endif %}">
+        {{ n.message }}
+
+        <small>{{ n.created_at|date:"M d, Y H:i" }}</small>
+      </div>
+    {% empty %}
+      <p style="text-align:center;">No notifications yet.</p>
+    {% endfor %}
+  </div>
+</body>
+</html>
